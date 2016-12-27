@@ -15,6 +15,7 @@ import {
 
 import Icon  from 'react-native-vector-icons/Ionicons';
 import NetUtil from '../common/NetUtil'
+import VideoListDetail from './VideoListDetail'
 
 var SCREEN_W = Dimensions.get('window').width;
 var SCREEN_H = Dimensions.get('window').height;
@@ -42,6 +43,11 @@ export default class List extends Component{
       this.getNetData();
   }
 
+  componentWillUnmount() {
+    // 如果存在this.timer，则使用clearTimeout清空。
+    // 如果你使用多个timer，那么用多个变量，或者用个数组来保存引用，然后逐个clear
+    this.timer && clearTimeout(this.timer);
+  }
   
   getNetData(){
     //get请求,以百度为例,没有参数,没有header
@@ -61,16 +67,13 @@ export default class List extends Component{
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.header}>
-            <Text style={styles.Nav}>列表页</Text>
-        </View>
         <ListView 
             style={styles.listView}
             dataSource={this.state.dataSource}
             renderRow={this._renderRow.bind(this)}
             //允许组头为空
             enableEmptySections = {true}
-            automaticallyAdjustContentInsets = {false}
+            automaticallyAdjustContentInsets = {true}
             // showsVerticalScrollIndicator = {false}
             pagingEnabled = {false}
             //多少个像素为一页
@@ -109,7 +112,7 @@ export default class List extends Component{
 
       let pic = {
           uri: rowData.logo,
-          src:require('../../relay.png') //本地图片
+          src:require('../../relay.png') //本地占位图
       };
       return(
           <TouchableOpacity
@@ -128,6 +131,17 @@ export default class List extends Component{
   //cell被点击了
   _cellPress(){
       console.log('cell被点击了');
+      //一定要在组件卸载的时候在componentWillUnmount函数中清除定时器，不然就会crash
+      this.timer = setTimeout(
+      () => { 
+        //   alert('cell被点击了！');
+            this.props.navigator.push({
+                title: '视频详情页',
+                component: VideoListDetail,
+            });
+        },
+        30 //单位是毫秒
+      );
   }
 
   //下拉刷新
@@ -141,29 +155,14 @@ export default class List extends Component{
       console.log('上拉刷新中。。。。')
       this.getNetData();
   }
-
 }
-
 
 //样式
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header:{
-      height:64,
-      paddingTop:25,
-      paddingBottom:12,
-      backgroundColor:'#ee735c'
-  },
-  Nav:{
-      color:'#fff',
-      fontSize:16,
-      textAlign:'center',
-      fontWeight:'600'
-  },
   listHeader:{
-      width:SCREEN_W,
       height:180,
   },
   listHeaderTitle:{
@@ -175,18 +174,13 @@ const styles = StyleSheet.create({
   listHeaderImage:{
       flex:1,
       backgroundColor:'purple',
-      width:SCREEN_W,
   },
   listView:{
-      width:SCREEN_W,
-      marginBottom:49
+      backgroundColor:'white'
   },
   item:{
-      justifyContent:'center',
-      alignItems:'stretch',
-      width:SCREEN_W,
       height:180,
       marginBottom:8,
-      backgroundColor:'#ee731a'
+      backgroundColor:'#ee701a'
   },
 });

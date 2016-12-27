@@ -7,92 +7,51 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
   View,
-  TabBarIOS
+  StyleSheet,
+  StatusBarIOS,
+  NavigatorIOS,
 } from 'react-native';
 import Icon  from 'react-native-vector-icons/Ionicons';
 
-import List from './app/creation/index'
-import Edit from './app/edit/index'
-import Account from './app/account/index'
-
-
-class TabBarView extends Component{
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedTab: 'List'
-    }
-  }
-
-  render(){
-
-    return(
-      <TabBarIOS  tintColor="#ee735c" >
-        
-        <Icon.TabBarItem
-          title='列表'
-          iconName='ios-videocam-outline'
-          selectedIconName='ios-videocam'
-          selected={this.state.selectedTab === 'List'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'List',
-            });
-          }}>
-          <List />
-        </Icon.TabBarItem>
-        <Icon.TabBarItem
-          title='编辑'
-          iconName='ios-recording-outline'
-          selectedIconName='ios-recording'
-          selected={this.state.selectedTab === 'Edit'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'Edit',
-            });
-          }}>
-          <Edit />
-        </Icon.TabBarItem>
-        <Icon.TabBarItem
-          title='账户'
-          iconName='ios-more-outline'
-          selectedIconName='ios-more'
-          selected={this.state.selectedTab === 'Account'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'Account',
-            });
-          }}>
-          <Account />
-        </Icon.TabBarItem>
-
-      </TabBarIOS>
-    );
-    
-  }
-}
+import TabBarView from './app/TabBarView'
 
 //根视图
 export default class sunleiRN extends Component {
 
   render() {
     return (
-      <TabBarView />
+      <View style={{flex: 1}}>
+          <NavigatorIOS
+            style={styles.container}
+            tintColor='#FF6600'
+            //初始化一个路由栈，并设置第一个默认场景
+            initialRoute={{
+              title: '视频',
+              component: TabBarView,
+            }}
+            //配置转场动画
+            configureScene={()=>{
+                return  Navigator.SceneConfigs.PushFromRight;
+            }}
+            //渲染场景
+            renderScene={(route, navigator) => {
+                let Component = route.component;
+                return (
+                    <Component navigator = {navigator} route = {route} {...route.passProps} />
+                )
+            }}
+          />
+
+        </View>
     );
   }
 }
 
-//样式
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F6F6EF',
   },
 });
 
