@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import Icon  from 'react-native-vector-icons/Ionicons';
 
-import List from './creation/index'
-import Edit from './edit/index'
-import Account from './account/index'
+import List from '../creation/index'
+import Edit from '../edit/index'
+import Account from '../account/index'
 
 
 export default class TabBarView extends Component{

@@ -13,6 +13,9 @@ import {
   Image,
 } from 'react-native';
 
+import Swiper from 'react-native-swiper';
+
+import Constant from '../common/const'
 import Icon  from 'react-native-vector-icons/Ionicons';
 import NetUtil from '../common/NetUtil'
 import VideoListDetail from './VideoListDetail'
@@ -54,6 +57,7 @@ export default class List extends Component{
     NetUtil.get(urlStr,'',(jasonData)=>{
         //下面是请求下来的数据
         console.log(jasonData);
+        this.bannerList = jasonData.result.data
         this.setState({
             // 一定要用dataSource的cloneWithRows来克隆数据源
             dataSource: this.state.dataSource.cloneWithRows(jasonData.result.data),
@@ -102,11 +106,38 @@ export default class List extends Component{
     return(
         this.state.isRefreshing ? null :
         <View style = {[styles.listHeader]}>
-            <Text style = {{flex:1,textAlign:'center',backgroundColor:'yellow'}}>我是列表头</Text>
+           <Swiper
+                height={200}
+                loop={true}
+                autoplay={true}
+                dot={<View style={styles.customDot} />}
+                activeDot={<View style={styles.customActiveDot} />}
+                paginationStyle={{
+                    bottom: 10
+                }}
+                backgroundColor='cyan'
+            >
+                    {this.bannerList.map((banner) => {
+                        console.log("adfkasdfjladsf");
+                        let bannerPic = {src:require('../../relay.png')}
+                        return (
+                            <TouchableOpacity key={banner.team_cn} activeOpacity={0.75} onPress = {this._onBannerPress.bind(this)}>
+                                <Image
+                                    style={styles.bannerImage}
+                                    source={bannerPic.src}
+                                />
+                            </TouchableOpacity>
+                        )
+                    })}
+                </Swiper>
         </View>
         )
   }
-
+  //广告条
+  _onBannerPress(){
+      console.log('广告条被点击了')
+      alert('我是banner')
+  }
   //cell
   _renderRow(rowData){
 
@@ -163,7 +194,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listHeader:{
-      height:180,
+      height:200,
+  },
+  bannerImage:{
+      height: 200,
+      width: Constant.window.width,
+      backgroundColor:'yellow'
   },
   listHeaderTitle:{
       backgroundColor:'purple',
@@ -183,4 +219,20 @@ const styles = StyleSheet.create({
       marginBottom:8,
       backgroundColor:'#ee701a'
   },
+  customDot: {
+        backgroundColor: '#ccc',
+        height: 1.5,
+        width: 15,
+        marginLeft: 2,
+        marginRight: 2,
+        marginTop: 2,
+    },
+    customActiveDot: {
+        backgroundColor: 'white',
+        height: 1.5,
+        width: 15,
+        marginLeft: 2,
+        marginRight: 2,
+        marginTop: 2,
+    },
 });
