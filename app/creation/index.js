@@ -22,7 +22,7 @@ import VideoListDetail from './VideoListDetail'
 
 var SCREEN_W = Dimensions.get('window').width;
 var SCREEN_H = Dimensions.get('window').height;
-const urlStr = 'http://platform.sina.com.cn/sports_all/client_api?app_key=3571367214&_sport_t_=football&_sport_s_=opta&_sport_a_=teamOrder&type=213&season=2015&format=json'
+const urlStr = 'http://food.boohee.com/fb/v1/feeds?page=0&per=10'
 //   const urlStr = 'http://facebook.github.io/react-native/movies.json'
 
 export default class List extends Component{
@@ -53,18 +53,32 @@ export default class List extends Component{
   }
   
   getNetData(){
-    //get请求,以百度为例,没有参数,没有header
+    //food list data
     NetUtil.get(urlStr,'',(jasonData)=>{
         //下面是请求下来的数据
         console.log(jasonData);
-        this.bannerList = jasonData.result.data
         this.setState({
             // 一定要用dataSource的cloneWithRows来克隆数据源
-            dataSource: this.state.dataSource.cloneWithRows(jasonData.result.data),
+            dataSource: this.state.dataSource.cloneWithRows(jasonData.feeds),
             isRefreshing:false
         });
     },(error)=>{
         console.error(error);
+        alert('网络错误！')
+    })
+    //banner list data 
+    NetUtil.get('http://food.boohee.com/fb/v1/home/banners','',(jasonData)=>{
+        //下面是请求下来的数据
+        console.log(jasonData);
+        this.bannerList = jasonData.banners
+        this.setState({
+            // 一定要用dataSource的cloneWithRows来克隆数据源
+            // dataSource: this.state.dataSource.cloneWithRows(jasonData.feeds),
+            isRefreshing:false
+        });
+    },(error)=>{
+        console.error(error);
+        alert('网络错误！')
     })
 }
 
@@ -118,13 +132,12 @@ export default class List extends Component{
                 backgroundColor='cyan'
             >
                     {this.bannerList.map((banner) => {
-                        console.log("adfkasdfjladsf");
-                        let bannerPic = {src:require('../../relay.png')}
+                        console.log("遍历banner数组");
                         return (
-                            <TouchableOpacity key={banner.team_cn} activeOpacity={0.75} onPress = {this._onBannerPress.bind(this)}>
+                            <TouchableOpacity key={banner.name} activeOpacity={0.75} onPress = {this._onBannerPress.bind(this)}>
                                 <Image
                                     style={styles.bannerImage}
-                                    source={bannerPic.src}
+                                    source={{uri:banner.image_key}}
                                 />
                             </TouchableOpacity>
                         )
@@ -139,21 +152,30 @@ export default class List extends Component{
       alert('我是banner')
   }
   //cell
-  _renderRow(rowData){
+  _renderRow(rowData,sectionID,rowID){
 
-      let pic = {
-          uri: rowData.logo,
-          src:require('../../relay.png') //本地占位图
+      let placeHolderPic = {
+          uri:require('../images/img_my_bg.png') //本地占位图
       };
+      
       return(
           <TouchableOpacity
             activeOpacity={0.75}
             onPress={this._cellPress.bind(this)}
           >
             <View style={styles.item}>
-                 <Text style={styles.listHeaderTitle}>{rowData.team_cn}</Text>
                  {/**注意加载本地图片时要这样间接的写，不能直接用require */}
-                 <Image source={rowData.logo ? pic : pic.src} style={styles.listHeaderImage}/>
+                 <Image source={rowData.background ? {uri:rowData.background} : placeHolderPic.uri} style={styles.listHeaderImage}>
+                    <Text  style={{marginLeft:30,marginTop:30,width:150,height:16,fontSize:14}}>
+                        {rowData.title}
+                    </Text>
+                    <Text  style={{marginLeft:30,marginTop:30,width:Constant.window.width,height:20,fontSize:16,fontWeight:'bold'}}>
+                        {rowData.content}
+                    </Text>
+                    <Text  style={{marginLeft:30,marginTop:50,width:150,height:16,fontSize:14,backgroundColor:'white'}}>
+                        {rowData.tail}
+                    </Text>
+                 </Image>
             </View>
           </TouchableOpacity>
       )
@@ -201,15 +223,9 @@ const styles = StyleSheet.create({
       width: Constant.window.width,
       backgroundColor:'yellow'
   },
-  listHeaderTitle:{
-      backgroundColor:'purple',
-      textAlign:'center',
-      paddingTop:15,
-      paddingBottom:10,
-  },
   listHeaderImage:{
       flex:1,
-      backgroundColor:'purple',
+    //   backgroundColor:'purple',
   },
   listView:{
       backgroundColor:'white'
@@ -217,7 +233,7 @@ const styles = StyleSheet.create({
   item:{
       height:180,
       marginBottom:8,
-      backgroundColor:'#ee701a'
+    //   backgroundColor:'#ee701a'
   },
   customDot: {
         backgroundColor: '#ccc',
