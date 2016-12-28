@@ -153,11 +153,9 @@ export default class List extends Component{
   }
   //cell
   _renderRow(rowData,sectionID,rowID){
-
       let placeHolderPic = {
           uri:require('../images/img_my_bg.png') //本地占位图
       };
-      
       return(
           <TouchableOpacity
             activeOpacity={0.75}

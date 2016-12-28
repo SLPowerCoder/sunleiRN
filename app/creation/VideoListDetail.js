@@ -5,26 +5,24 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  WebView
 } from 'react-native';
 
-export default class VideoListDetail extends Component{
+var DEFAULT_URL = 'http://www.lcode.org';
 
-  render(){
-    return(
-      <View style={styles.container}>
-        <Text>视频详情页</Text>
+export default class VideoListDetail extends Component{
+  render() {
+    return (
+      <View style={{flex:1}}>
+        <WebView  
+          url={DEFAULT_URL}
+          startInLoadingState={true}
+          domStorageEnabled={true}
+          javaScriptEnabled={true}
+          >
+        </WebView>
       </View>
-    )
+    );
   }
 }
-
-//样式
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
