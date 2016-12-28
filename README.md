@@ -1,7 +1,9 @@
-# sunleiRN
+# react native学习
 
-## 常见的问题的解决方法
-http://www.jianshu.com/p/582e3031aa0c
+## let、const、var
+const常量
+let和var的用法差不多，只是let的作用域是块级作用域，var是用来声明全局变量的
+**有人建议变量的类型能用const类型就用const类型，能用let类型就用let类型**
 
 ## 解构
 假如一个组件有一个属性name，那么我可以通过如下方式来获得name属性
@@ -26,28 +28,14 @@ let name = this.props.name
 2.使用createClass函数创建的类，不需要bind
 
 
-## NavigatorIOS导航控制器（注意传值）
-```
- <NavigatorIOS
-        style={styles.container}
-        tintColor='#FF6600'
-        //1.初始化一个路由栈route，并设置第一个默认场景
-        initialRoute={{
-            title: '视频',
-            component: TabBarView,
-        }}
-        //2.配置转场动画
-        configureScene={()=>{
-            return  Navigator.SceneConfigs.PushFromRight;
-        }}
-        //3.渲染场景
-        renderScene={(route, navigator) => {
-            let Component = route.component;
-            return (
-                //注意：这几个属性一定要写上，便于以后push的时候父组件向子组件传值，passProps可以是任意值，是自己确定的
-                <Component navigator = {navigator} route = {route} {...route.passProps} />
-            )
-        }}
- />
-```
+## 常见的问题的解决方法
+http://www.jianshu.com/p/582e3031aa0c
+
+
+## 文章推荐
+[react native](http://facebook.github.io/react-native/)
+[react native中文网](http://reactnative.cn/)
+[组件库](https://js.coach/react-native)
+[常用组件1](http://blog.csdn.net/chichengjunma/article/details/52920137)
+[常用组件2](http://www.jianshu.com/p/d9cd9a868764)
 
