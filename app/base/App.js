@@ -22,7 +22,7 @@ export default class App extends Component {
           <NavigatorIOS
             style={styles.container}
             tintColor='#FF6600'
-            //初始化一个路由栈，并设置第一个默认场景
+            //初始化一个路由栈route，并设置第一个默认场景
             initialRoute={{
               title: '视频',
               component: TabBarView,
@@ -35,6 +35,7 @@ export default class App extends Component {
             renderScene={(route, navigator) => {
                 let Component = route.component;
                 return (
+                    //这几个属性一定要写上，便于以后push的时候父组件向子组件传值
                     <Component navigator = {navigator} route = {route} {...route.passProps} />
                 )
             }}

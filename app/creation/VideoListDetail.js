@@ -13,10 +13,11 @@ var DEFAULT_URL = 'http://www.lcode.org';
 
 export default class VideoListDetail extends Component{
   render() {
+    let {feed} = this.props
     return (
       <View style={{flex:1}}>
         <WebView  
-          url={DEFAULT_URL}
+          url={feed.link}
           startInLoadingState={true}
           domStorageEnabled={true}
           javaScriptEnabled={true}

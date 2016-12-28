@@ -153,24 +153,26 @@ export default class List extends Component{
   }
   //cell
   _renderRow(rowData,sectionID,rowID){
+
       let placeHolderPic = {
           uri:require('../images/img_my_bg.png') //本地占位图
       };
+      
       return(
           <TouchableOpacity
             activeOpacity={0.75}
-            onPress={this._cellPress.bind(this)}
+            onPress={this._cellPress.bind(this,rowData)}
           >
             <View style={styles.item}>
                  {/**注意加载本地图片时要这样间接的写，不能直接用require */}
                  <Image source={rowData.background ? {uri:rowData.background} : placeHolderPic.uri} style={styles.listHeaderImage}>
-                    <Text  style={{marginLeft:30,marginTop:30,width:150,height:16,fontSize:14}}>
+                    <Text  style={{marginLeft:30,marginTop:30,width:300,height:18,fontSize:14}}>
                         {rowData.title}
                     </Text>
-                    <Text  style={{marginLeft:30,marginTop:30,width:Constant.window.width,height:20,fontSize:16,fontWeight:'bold'}}>
+                    <Text  style={{marginLeft:30,marginTop:30,width:Constant.window.width,height:20,fontSize:16}}>
                         {rowData.content}
                     </Text>
-                    <Text  style={{marginLeft:30,marginTop:50,width:150,height:16,fontSize:14,backgroundColor:'white'}}>
+                    <Text  style={{marginLeft:30,marginTop:50,width:200,height:18,fontSize:14}}>
                         {rowData.tail}
                     </Text>
                  </Image>
@@ -180,7 +182,7 @@ export default class List extends Component{
   }
 
   //cell被点击了
-  _cellPress(){
+  _cellPress(rowData){
       console.log('cell被点击了');
       //一定要在组件卸载的时候在componentWillUnmount函数中清除定时器，不然就会crash
       this.timer = setTimeout(
@@ -189,6 +191,9 @@ export default class List extends Component{
             this.props.navigator.push({
                 title: '视频详情页',
                 component: VideoListDetail,
+                passProps:{
+                    feed:rowData
+                }
             });
         },
         30 //单位是毫秒
